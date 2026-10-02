@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const VERSION='0.2.2', STORE='house-five-ludo:v2';
+  const VERSION='0.2.3', STORE='house-five-ludo:v2';
   const launchParams=new URLSearchParams(location.search);
   const HOST_NAME=String(launchParams.get('player')||'You').trim().slice(0,40)||'You';
   const COLORS=['red','green','yellow','blue'];
@@ -177,7 +177,7 @@
   function openRules(){els.drawer.classList.add('open');els.scrim.classList.remove('hidden')}
   function closeRules(){els.drawer.classList.remove('open');els.scrim.classList.add('hidden')}
   function reset(){clearTimeout(botTimer);localStorage.removeItem(STORE);state=freshState();closeRules();render();toast('Local game reset')}
-  function returnHome(){const target=launchParams.get('return');location.href=(target&&target.startsWith('/')&&!target.startsWith('//'))?target:'/'}
+  function returnHome(){location.assign(new URL('/',location.href).href)}
 
   buildBoard();render();
   $('#homeBtn').addEventListener('click',returnHome);$('#rulesBtn').addEventListener('click',openRules);$('#closeRulesBtn').addEventListener('click',closeRules);els.scrim.addEventListener('click',closeRules);
