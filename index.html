@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no" />
   <meta name="theme-color" content="#6b111a" />
   <meta name="description" content="House Five Ludo - Nepali-inspired full-screen game microfrontend" />
-  <title>House Five Ludo</title>
+  <title>House Five Ludo</title>\n  <base href="https://house-five-ludo.vercel.app/" />
   <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
@@ -57,7 +57,7 @@
       <label><span><b>Safe star squares</b><small>Pieces cannot be captured there</small></span><input type="checkbox" data-rule="safeSquares" checked></label>
       <label><span><b>Protected stacks</b><small>Two same-colour pieces form a block</small></span><input type="checkbox" data-rule="stackProtection" checked></label>
       <button id="resetGameBtn" class="danger-btn" type="button">Reset local game</button>
-      <p class="rules-note">Standalone v0.1 uses local game state. Real multi-device rooms will use the House Five verified identity and a module-owned realtime service/database.</p>
+      <p class="rules-note">House Five-linked v0.2 can receive your display name from the host app. Real multi-device rooms will use verified House Five identity and a module-owned realtime service/database.</p>
     </aside>
     <div id="drawerScrim" class="drawer-scrim hidden"></div>
     <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>

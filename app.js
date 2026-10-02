@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const VERSION='0.1.0', STORE='house-five-ludo:v1';
+  const VERSION='0.2.0', STORE='house-five-ludo:v2';\n  const launchParams=new URLSearchParams(location.search);\n  const HOST_NAME=String(launchParams.get('player')||'You').trim().slice(0,40)||'You';
   const COLORS=['red','green','yellow','blue'];
   const COLOR_NAMES={red:'Red',green:'Green',yellow:'Yellow',blue:'Blue'};
   const START={red:0,green:13,yellow:26,blue:39};
@@ -110,7 +110,7 @@
   function render(){renderLobby();renderPlayers();renderTokens();renderTurn();renderRules();save();maybeRunBot()}
 
   function createRoom(quick=false){
-    state=freshState();state.room=roomCode();state.players=[{id:'host',name:'You',color:'red',bot:false}];
+    state=freshState();state.room=roomCode();state.players=[{id:'host',name:HOST_NAME,color:'red',bot:false}];
     if(quick){state.players.push({id:'bot1',name:'Lakhey',color:'green',bot:true},{id:'bot2',name:'Yeti',color:'yellow',bot:true},{id:'bot3',name:'Kumari',color:'blue',bot:true});startGame();return}
     render();
   }
@@ -175,12 +175,12 @@
   function openRules(){els.drawer.classList.add('open');els.scrim.classList.remove('hidden')}
   function closeRules(){els.drawer.classList.remove('open');els.scrim.classList.add('hidden')}
   function reset(){clearTimeout(botTimer);localStorage.removeItem(STORE);state=freshState();closeRules();render();toast('Local game reset')}
-  function returnHome(){const params=new URLSearchParams(location.search);location.href=params.get('return')||'/'}
+  function returnHome(){const target=launchParams.get('return');location.href=(target&&target.startsWith('/')&&!target.startsWith('//'))?target:'/'}
 
   buildBoard();render();
   $('#homeBtn').addEventListener('click',returnHome);$('#rulesBtn').addEventListener('click',openRules);$('#closeRulesBtn').addEventListener('click',closeRules);els.scrim.addEventListener('click',closeRules);
   $('#createRoomBtn').addEventListener('click',()=>createRoom(false));$('#quickPlayBtn').addEventListener('click',()=>createRoom(true));$('#addBotBtn').addEventListener('click',addBot);$('#startGameBtn').addEventListener('click',startGame);els.dice.addEventListener('click',rollDice);$('#resetGameBtn').addEventListener('click',reset);
   $('#copyCodeBtn').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(state.room||'');toast('Room code copied')}catch{toast(`Room: ${state.room}`)}});
   document.querySelectorAll('[data-rule]').forEach(input=>input.addEventListener('change',()=>{state.rules[input.dataset.rule]=input.checked;save()}));
-  window.HouseFiveLudo={version:VERSION,getState:()=>JSON.parse(JSON.stringify(state)),reset};
+  window.HouseFiveLudo={version:VERSION,mode:location.hostname==='house-five-ludo.vercel.app'?'standalone-or-proxied':'preview',hostName:HOST_NAME,getState:()=>JSON.parse(JSON.stringify(state)),reset};
 })();

@@ -2,9 +2,9 @@
 
 Full-screen Nepali-inspired Ludo microfrontend for the House Five platform.
 
-**Version:** 0.1.0
+**Version:** 0.2.0
 
-This repository is deliberately independent from the main `house-five` repo. The main application has not been modified.
+This repository remains independent from the main `house-five` repo. Version 0.2.0 is prepared to be reverse-proxied by House Five at `/ludo` while keeping game code and deployment isolated.
 
 ## Included now
 
@@ -20,7 +20,7 @@ This repository is deliberately independent from the main `house-five` repo. The
 - Nepali-inspired House Five visual treatment
 - Local persistence for testing without production infrastructure
 - `/api/health` endpoint
-- `/ludo` and `/games/ludo` compatibility for future House Five rewrites
+- Canonical Vercel asset base so the UI works when reverse-proxied behind House Five `/ludo`\n- Optional `player` display-name launch context and safe same-origin return handling
 
 ## Local verification
 
@@ -33,4 +33,4 @@ Open `http://localhost:4174`.
 
 ## Important multiplayer boundary
 
-Version 0.1.0 uses local browser state. In the connected version, dice rolls, room membership, and move validation must become server-authoritative. See `ARCHITECTURE.md`.
+Version 0.2.0 still uses local browser state. In the connected version, dice rolls, room membership, and move validation must become server-authoritative. See `ARCHITECTURE.md`.
