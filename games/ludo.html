@@ -3,63 +3,153 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no" />
-  <meta name="theme-color" content="#6b111a" />
-  <meta name="description" content="House Five Ludo - Nepali-inspired full-screen game microfrontend" />
+  <meta name="theme-color" content="#061b3b" />
+  <meta name="description" content="House Five Ludo - game-first Ludo microfrontend" />
   <title>House Five Ludo</title>
   <base href="https://house-five-ludo.vercel.app/" />
   <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
   <main id="gameApp" class="game-app">
-    <div class="topbar">
-      <button id="homeBtn" class="round-btn" type="button" aria-label="Back to House Five">⌂</button>
-      <div class="room-pill"><small>HOUSE FIVE LUDO</small><b id="roomLabel">LOCAL</b></div>
-      <button id="rulesBtn" class="round-btn" type="button" aria-label="Game rules">⚙</button>
-    </div>
-
-    <section id="boardStage" class="board-stage" aria-label="Ludo board">
-      <div id="board" class="ludo-board" role="grid" aria-label="Traditional Ludo board"></div>
-      <div id="tokenLayer" class="token-layer" aria-live="polite"></div>
-      <div class="center-emblem" aria-hidden="true"><span>५</span><small>घर</small></div>
-    </section>
-
-    <div id="playersBar" class="players-bar"></div>
-
-    <section id="turnDock" class="turn-dock hidden">
-      <div class="turn-copy"><small id="turnKicker">YOUR TURN</small><b id="turnName">Player</b><span id="gameStatus">Roll the dice</span></div>
-      <button id="diceBtn" class="dice-btn" type="button" aria-label="Roll dice"><span id="diceFace">⚄</span><small>ROLL</small></button>
-    </section>
-
-    <section id="lobby" class="overlay lobby-overlay">
-      <div class="lobby-card">
-        <div class="heritage-mark"><span>५</span></div>
-        <div class="eyebrow">HOUSE FIVE · खेल आँगन</div>
-        <h1>Nepali Ludo</h1>
-        <p>A full-screen House Five game room. Create a room, wait for players, then let the family arguments begin in the traditional dice-based manner.</p>
-        <div id="lobbyStart" class="lobby-actions">
-          <button id="createRoomBtn" class="primary-btn" type="button">Create game</button>
-          <button id="quickPlayBtn" class="secondary-btn" type="button">Quick play with bots</button>
+    <section id="homeScreen" class="screen home-screen">
+      <header class="home-top">
+        <button id="homeBtn" class="profile-card" type="button" aria-label="Back to House Five">
+          <span class="profile-avatar">५</span>
+          <span class="profile-copy"><b id="profileName">House member</b><small>House Five · Ludo</small></span>
+        </button>
+        <div class="wallet">
+          <span class="wallet-chip"><i>●</i><b>12,450</b><em>＋</em></span>
+          <span class="wallet-chip gem"><i>◆</i><b>320</b><em>＋</em></span>
         </div>
-        <div id="waitingRoom" class="waiting-room hidden">
-          <div class="room-code"><span>ROOM CODE</span><b id="roomCode">------</b><button id="copyCodeBtn" type="button">Copy</button></div>
-          <div id="lobbyPlayers" class="lobby-players"></div>
-          <div class="waiting-actions"><button id="addBotBtn" class="secondary-btn" type="button">＋ Add bot</button><button id="startGameBtn" class="primary-btn" type="button" disabled>Start game</button></div>
-          <small id="waitingHint">At least 2 players are required.</small>
+        <button id="rulesBtnHome" class="glass-icon" type="button" aria-label="Game settings">☰</button>
+      </header>
+
+      <div class="home-content">
+        <div class="logo-stage" aria-label="House Five Ludo">
+          <div class="dice dice-one">⚄</div>
+          <div class="dice dice-two">⚂</div>
+          <div class="crown">♛</div>
+          <div class="logo-word"><span>L</span><span>U</span><span>D</span><span>O</span></div>
+          <div class="logo-sub">HOUSE FIVE · खेल आँगन</div>
+          <div class="hero-pawns" aria-hidden="true">
+            <i class="pawn red"></i><i class="pawn yellow"></i><i class="pawn blue"></i><i class="pawn green"></i>
+          </div>
+        </div>
+
+        <div class="mode-stack">
+          <button id="housematesBtn" class="mode-card housemates" type="button">
+            <span class="mode-icon">👥</span>
+            <span class="mode-copy"><b>Play with Housemates</b><small>Create a room or play together</small></span>
+            <span class="mode-arrow">›</span>
+          </button>
+          <button id="botsBtn" class="mode-card bots" type="button">
+            <span class="mode-icon">🤖</span>
+            <span class="mode-copy"><b>Play with Bots</b><small>Quick offline game</small></span>
+            <span class="mode-arrow">›</span>
+          </button>
+          <button id="quickClassicBtn" class="mode-card classic" type="button">
+            <span class="mode-icon">🎲</span>
+            <span class="mode-copy"><b>Quick Classic</b><small>You + 3 bots · classic rules</small></span>
+            <span class="mode-arrow">›</span>
+          </button>
+        </div>
+      </div>
+
+      <nav class="game-nav" aria-label="Ludo navigation">
+        <button class="active" type="button"><span>⌂</span><small>Home</small></button>
+        <button id="navHousemates" type="button"><span>👥</span><small>Housemates</small></button>
+        <button id="navRules" type="button"><span>⚙</span><small>Rules</small></button>
+      </nav>
+    </section>
+
+    <section id="setupScreen" class="screen setup-screen hidden">
+      <header class="setup-top">
+        <button id="setupBackBtn" class="glass-icon" type="button" aria-label="Back">‹</button>
+        <div class="setup-title"><small id="setupEyebrow">HOUSE FIVE ROOM</small><b id="setupTitle">Play with Housemates</b></div>
+        <button id="rulesBtnSetup" class="glass-icon" type="button" aria-label="Rules">⚙</button>
+      </header>
+
+      <div class="setup-content">
+        <div class="setup-mode-tabs">
+          <button id="housematesTab" class="active" type="button"><span>👥</span> Housemates</button>
+          <button id="botsTab" type="button"><span>🤖</span> Bots</button>
+        </div>
+
+        <div class="setup-card">
+          <div class="setup-preview">
+            <div class="mini-board" aria-hidden="true">
+              <i class="mini-q green"></i><i class="mini-q red"></i><i class="mini-q blue"></i><i class="mini-q yellow"></i>
+              <span>५</span>
+            </div>
+            <div><small>MODE</small><b id="modeName">Housemates</b><p id="modeDescription">Create a room and add people playing with you.</p></div>
+          </div>
+
+          <div id="roomPanel" class="room-panel">
+            <div class="room-code-box">
+              <span><small>ROOM CODE</small><b id="roomCode">------</b></span>
+              <button id="copyCodeBtn" type="button">Copy</button>
+            </div>
+            <button id="createRoomBtn" class="outline-btn" type="button">Create new room</button>
+          </div>
+
+          <div class="section-kicker"><span>PLAYERS</span><small id="playerCountLabel">1 / 4</small></div>
+          <div id="lobbyPlayers" class="player-slots"></div>
+
+          <div id="housemateActions" class="setup-actions">
+            <button id="addHousemateBtn" class="secondary-action" type="button">＋ Add local housemate</button>
+            <button id="startGameBtn" class="start-action" type="button" disabled>Start Game <span>›</span></button>
+          </div>
+
+          <div id="botActions" class="setup-actions hidden">
+            <div class="bot-count">
+              <button type="button" data-bots="1">1 Bot</button>
+              <button type="button" data-bots="2">2 Bots</button>
+              <button type="button" data-bots="3" class="active">3 Bots</button>
+            </div>
+            <button id="startBotGameBtn" class="start-action" type="button">Start Game <span>›</span></button>
+          </div>
         </div>
       </div>
     </section>
 
+    <section id="playScreen" class="screen play-screen hidden">
+      <header class="play-top">
+        <button id="playBackBtn" class="glass-icon" type="button" aria-label="Leave game">‹</button>
+        <div class="mode-pill"><span>🏆</span><div><b id="playModeTitle">Classic Mode</b><small>First to get 4 tokens home</small></div></div>
+        <button id="rulesBtnPlay" class="glass-icon" type="button" aria-label="Rules">☰</button>
+      </header>
+
+      <div class="arena">
+        <div id="cornerPlayers" class="corner-players"></div>
+        <section id="boardStage" class="board-stage" aria-label="Ludo board">
+          <div id="board" class="ludo-board" role="grid" aria-label="Traditional Ludo board"></div>
+          <div id="tokenLayer" class="token-layer" aria-live="polite"></div>
+          <div class="center-emblem" aria-hidden="true"><span>५</span></div>
+        </section>
+      </div>
+
+      <div class="play-bottom">
+        <button id="chatStubBtn" class="play-tool" type="button"><span>•••</span><small>Chat</small></button>
+        <div class="turn-panel">
+          <button id="diceBtn" class="big-dice" type="button" aria-label="Roll dice"><span id="diceFace">⚄</span></button>
+          <div class="turn-copy"><b id="turnName">Your Turn</b><small id="gameStatus">Roll the dice</small></div>
+        </div>
+        <button id="emojiStubBtn" class="play-tool" type="button"><span>🙂</span><small>Emoji</small></button>
+      </div>
+    </section>
+
     <aside id="rulesDrawer" class="rules-drawer" aria-label="Custom rules">
-      <div class="rules-head"><div><small>HOUSE RULES</small><h2>Custom game rules</h2></div><button id="closeRulesBtn" class="round-btn" type="button">×</button></div>
+      <div class="rules-head"><div><small>HOUSE RULES</small><h2>Custom game rules</h2></div><button id="closeRulesBtn" class="glass-icon" type="button">×</button></div>
       <label><span><b>Extra roll on six</b><small>Classic rule</small></span><input type="checkbox" data-rule="extraSix" checked></label>
       <label><span><b>Extra roll after capture</b><small>Reward aggressive play</small></span><input type="checkbox" data-rule="extraCapture" checked></label>
       <label><span><b>Three sixes lose the turn</b><small>Stops endless luck</small></span><input type="checkbox" data-rule="threeSixes" checked></label>
       <label><span><b>Exact roll to finish</b><small>No overshooting home</small></span><input type="checkbox" data-rule="exactFinish" checked></label>
       <label><span><b>Safe star squares</b><small>Pieces cannot be captured there</small></span><input type="checkbox" data-rule="safeSquares" checked></label>
       <label><span><b>Protected stacks</b><small>Two same-colour pieces form a block</small></span><input type="checkbox" data-rule="stackProtection" checked></label>
-      <button id="resetGameBtn" class="danger-btn" type="button">Reset local game</button>
-      <p class="rules-note">House Five-linked v0.2 can receive your display name from the host app. Real multi-device rooms will use verified House Five identity and a module-owned realtime service/database.</p>
+      <button id="resetGameBtn" class="danger-btn" type="button">Reset game data</button>
+      <p class="rules-note">Housemate rooms are currently local/pass-and-play frontend mode. The room UI is ready for real House Five realtime multiplayer in the next backend stage.</p>
     </aside>
+
     <div id="drawerScrim" class="drawer-scrim hidden"></div>
     <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
   </main>
