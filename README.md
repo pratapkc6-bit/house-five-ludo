@@ -2,7 +2,7 @@
 
 Realtime multiplayer Ludo microfrontend for House Five.
 
-**Version:** 0.4.2
+**Version:** 0.4.3
 
 ## Multiplayer v1
 
@@ -29,3 +29,7 @@ Open Ludo through House Five at `/ludo` for authenticated multiplayer. Direct st
 Multiplayer API and session requests are pinned to `location.origin` so House Five authentication continues to work even though Ludo static assets use the standalone deployment as their document base.
 
 - Host-controlled rematch after a completed online game.
+
+## v0.4.3 reliability fix
+
+Housemate multiplayer now uses the dedicated House Five `/api/ludo` endpoint instead of the generic `/api/app` action router. This prevents the room flow from surfacing unrelated `Unknown House Five action` errors and keeps create/join/state/realtime commands in one versioned API.

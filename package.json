@@ -1,6 +1,6 @@
 {
   "name": "house-five-ludo",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "private": true,
   "description": "House Five realtime multiplayer Ludo microfrontend",
   "scripts": { "check": "node --check app.js" },

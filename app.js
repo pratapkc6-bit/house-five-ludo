@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const VERSION='0.4.2', STORE='house-five-ludo:v4';
+  const VERSION='0.4.3', STORE='house-five-ludo:v4';
   const launchParams=new URLSearchParams(location.search);
   let HOST_NAME=String(launchParams.get('player')||'House member').trim().slice(0,40)||'House member';
   let HOUSE_USER=null,realtimeGeneration=0,realtimeSeq=null;
@@ -48,10 +48,14 @@
   function escapeHtml(v=''){return String(v).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
   function showScreen(name){els.home.classList.toggle('hidden',name!=='home');els.setup.classList.toggle('hidden',name!=='setup');els.play.classList.toggle('hidden',name!=='playing');state.phase=name;save()}
   function setRoomStatus(text,kind=''){els.roomStatus.textContent=text;els.roomStatus.className='room-status'+(kind?' '+kind:'')}
-  async function api(action,payload={}){
-    const res=await fetch(new URL('/api/app',HOUSE_ORIGIN).href,{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({action,...payload})});
+  async function api(op,payload={}){
+    const res=await fetch(new URL('/api/ludo',HOUSE_ORIGIN).href,{method:'POST',credentials:'include',cache:'no-store',headers:{'Content-Type':'application/json'},body:JSON.stringify({op,...payload})});
     let body={};try{body=await res.json()}catch{}
-    if(!res.ok)throw new Error(body.error||('House Five request failed ('+res.status+')'));
+    if(!res.ok){
+      const message=body.error||('House Five Ludo request failed ('+res.status+')');
+      const detail=body.operation&&body.operation!==op?' · operation '+body.operation:'';
+      throw new Error(message+detail);
+    }
     return body;
   }
   async function ensureHouseUser({silent=false}={}){
@@ -178,7 +182,7 @@
     try{
       await ensureHouseUser();setRoomStatus('Creating secure House Five room…');
       if(state.online&&state.room)await leaveOnlineRoom({quiet:true});
-      const result=await api('ludo-create-room',{rules:state.rules});applyServerRoom(result.room);toast(`Room ${result.room.code} created`);
+      const result=await api('create',{rules:state.rules});applyServerRoom(result.room);toast(`Room ${result.room.code} created`);
     }catch(err){setRoomStatus(err.message,'error');toast(err.message)}
   }
   async function joinOnlineRoom(){
@@ -187,31 +191,31 @@
     try{
       await ensureHouseUser();setRoomStatus('Joining room…');
       if(state.online&&state.room&&state.room!==code)await leaveOnlineRoom({quiet:true});
-      const result=await api('ludo-join-room',{code});els.joinCode.value='';applyServerRoom(result.room);toast(`Joined ${result.room.code}`);
+      const result=await api('join',{code});els.joinCode.value='';applyServerRoom(result.room);toast(`Joined ${result.room.code}`);
     }catch(err){setRoomStatus(err.message,'error');toast(err.message)}
   }
   async function refreshOnlineRoom({quiet=false,startWatch=false}={}){
     if(!state.online||!state.room)return;
-    try{const result=await api('ludo-room-state',{code:state.room});applyServerRoom(result.room,{startWatch});}
+    try{const result=await api('state',{code:state.room});applyServerRoom(result.room,{startWatch});}
     catch(err){if(!quiet)toast(err.message);if(/not found|join this/i.test(err.message||'')){stopRealtime();state.online=false;state.room=null;showScreen('setup');render()}}
   }
   async function startOnlineGame(){
-    try{const result=await api('ludo-start',{code:state.room});applyServerRoom(result.room);toast('Match started')}
+    try{const result=await api('start',{code:state.room});applyServerRoom(result.room);toast('Match started')}
     catch(err){toast(err.message)}
   }
   async function leaveOnlineRoom({quiet=false}={}){
     if(!state.online||!state.room)return;
     const code=state.room;stopRealtime();
-    try{await api('ludo-leave',{code})}catch(err){if(!quiet)toast(err.message)}
+    try{await api('leave',{code})}catch(err){if(!quiet)toast(err.message)}
     state.online=false;state.room=null;state.roomId=null;state.serverStatus=null;state.players=[{id:'host',name:HOST_NAME,color:'red',seat:0,bot:false}];resetPieces();showScreen('setup');render();
   }
   async function startRealtimeWatch(){
     if(!state.online||!state.room)return;
     const generation=++realtimeGeneration,code=state.room,roomId=state.roomId;
     try{
-      const head=await api('realtime-wait',{afterSeq:null,limit:50,waitMs:0});realtimeSeq=Number(head.latestSeq||0);
+      const head=await api('wait',{afterSeq:null,limit:50,waitMs:0});realtimeSeq=Number(head.latestSeq||0);
       while(generation===realtimeGeneration&&state.online&&state.room===code){
-        const feed=await api('realtime-wait',{afterSeq:realtimeSeq,limit:100,waitMs:9000});realtimeSeq=Number(feed.latestSeq??realtimeSeq??0);
+        const feed=await api('wait',{afterSeq:realtimeSeq,limit:100,waitMs:9000});realtimeSeq=Number(feed.latestSeq??realtimeSeq??0);
         if(generation!==realtimeGeneration||state.room!==code)break;
         const changed=(feed.items||[]).some(e=>e.entityType==='ludo_room'&&(e.entityId===roomId||e.payload?.code===code));
         if(changed||!(feed.items||[]).length)await refreshOnlineRoom({quiet:true,startWatch:false});
@@ -231,7 +235,7 @@
   async function rematchGame(){
     if(!state.winner)return;
     if(state.online){
-      try{const result=await api('ludo-rematch',{code:state.room});applyServerRoom(result.room);toast('Rematch started')}
+      try{const result=await api('rematch',{code:state.room});applyServerRoom(result.room);toast('Rematch started')}
       catch(err){toast(err.message)}
       return;
     }
@@ -241,7 +245,7 @@
     const p=current();if(state.phase!=='playing'||state.rolled||!canCurrentUserAct(p)||state.winner)return;
     if(state.online){
       els.dice.disabled=true;
-      try{const result=await api('ludo-roll',{code:state.room});applyServerRoom(result.room)}catch(err){toast(err.message);renderTurn()}
+      try{const result=await api('roll',{code:state.room});applyServerRoom(result.room)}catch(err){toast(err.message);renderTurn()}
       return;
     }
     animateRoll(()=>resolveRoll(randomRoll()));
@@ -258,7 +262,7 @@
     if(state.phase!=='playing'||!state.rolled||state.winner)return;
     const p=current();if(!canCurrentUserAct(p))return;
     if(state.online){
-      try{const result=await api('ludo-move',{code:state.room,pieceIndex:index});applyServerRoom(result.room)}catch(err){toast(err.message);await refreshOnlineRoom({quiet:true})}
+      try{const result=await api('move',{code:state.room,pieceIndex:index});applyServerRoom(result.room)}catch(err){toast(err.message);await refreshOnlineRoom({quiet:true})}
       return;
     }
     const roll=state.dice,moves=movablePieces(p,roll);if(!moves.includes(index))return;
