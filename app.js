@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const VERSION='0.4.3', STORE='house-five-ludo:v4';
+  const VERSION='0.4.4', STORE='house-five-ludo:v4';
   const launchParams=new URLSearchParams(location.search);
   let HOST_NAME=String(launchParams.get('player')||'House member').trim().slice(0,40)||'House member';
   let HOUSE_USER=null,realtimeGeneration=0,realtimeSeq=null;

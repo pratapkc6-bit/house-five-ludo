@@ -2,7 +2,7 @@
 
 Realtime multiplayer Ludo microfrontend for House Five.
 
-**Version:** 0.4.3
+**Version:** 0.4.4
 
 ## Multiplayer v1
 
@@ -33,3 +33,5 @@ Multiplayer API and session requests are pinned to `location.origin` so House Fi
 ## v0.4.3 reliability fix
 
 Housemate multiplayer now uses the dedicated House Five `/api/ludo` endpoint instead of the generic `/api/app` action router. This prevents the room flow from surfacing unrelated `Unknown House Five action` errors and keeps create/join/state/realtime commands in one versioned API.
+
+- Versioned frontend asset URLs force installed/PWA clients to load the fixed multiplayer bundle.
