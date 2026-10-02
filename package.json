@@ -1,6 +1,6 @@
 {
   "name": "house-five-ludo",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "description": "House Five full-screen Nepali-inspired Ludo microfrontend",
   "scripts": { "check": "node --check app.js" },

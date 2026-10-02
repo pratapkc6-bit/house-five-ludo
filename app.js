@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const VERSION='0.2.0', STORE='house-five-ludo:v2';\n  const launchParams=new URLSearchParams(location.search);\n  const HOST_NAME=String(launchParams.get('player')||'You').trim().slice(0,40)||'You';
+  const VERSION='0.2.1', STORE='house-five-ludo:v2';\n  const launchParams=new URLSearchParams(location.search);\n  const HOST_NAME=String(launchParams.get('player')||'You').trim().slice(0,40)||'You';
   const COLORS=['red','green','yellow','blue'];
   const COLOR_NAMES={red:'Red',green:'Green',yellow:'Yellow',blue:'Blue'};
   const START={red:0,green:13,yellow:26,blue:39};
