@@ -1,6 +1,8 @@
 (() => {
   'use strict';
-  const VERSION='0.2.1', STORE='house-five-ludo:v2';\n  const launchParams=new URLSearchParams(location.search);\n  const HOST_NAME=String(launchParams.get('player')||'You').trim().slice(0,40)||'You';
+  const VERSION='0.2.2', STORE='house-five-ludo:v2';
+  const launchParams=new URLSearchParams(location.search);
+  const HOST_NAME=String(launchParams.get('player')||'You').trim().slice(0,40)||'You';
   const COLORS=['red','green','yellow','blue'];
   const COLOR_NAMES={red:'Red',green:'Green',yellow:'Yellow',blue:'Blue'};
   const START={red:0,green:13,yellow:26,blue:39};
@@ -182,5 +184,5 @@
   $('#createRoomBtn').addEventListener('click',()=>createRoom(false));$('#quickPlayBtn').addEventListener('click',()=>createRoom(true));$('#addBotBtn').addEventListener('click',addBot);$('#startGameBtn').addEventListener('click',startGame);els.dice.addEventListener('click',rollDice);$('#resetGameBtn').addEventListener('click',reset);
   $('#copyCodeBtn').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(state.room||'');toast('Room code copied')}catch{toast(`Room: ${state.room}`)}});
   document.querySelectorAll('[data-rule]').forEach(input=>input.addEventListener('change',()=>{state.rules[input.dataset.rule]=input.checked;save()}));
-  window.HouseFiveLudo={version:VERSION,mode:location.hostname==='house-five-ludo.vercel.app'?'standalone-or-proxied':'preview',hostName:HOST_NAME,getState:()=>JSON.parse(JSON.stringify(state)),reset};
+  window.HouseFiveLudo={version:VERSION,mode:location.pathname.startsWith('/ludo')||location.pathname.startsWith('/games/ludo')?'house-five-proxy':'standalone',hostName:HOST_NAME,getState:()=>JSON.parse(JSON.stringify(state)),reset};
 })();
