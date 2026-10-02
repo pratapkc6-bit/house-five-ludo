@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no" />
+  <meta name="theme-color" content="#6b111a" />
+  <meta name="description" content="House Five Ludo - Nepali-inspired full-screen game microfrontend" />
+  <title>House Five Ludo</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <main id="gameApp" class="game-app">
+    <div class="topbar">
+      <button id="homeBtn" class="round-btn" type="button" aria-label="Back to House Five">⌂</button>
+      <div class="room-pill"><small>HOUSE FIVE LUDO</small><b id="roomLabel">LOCAL</b></div>
+      <button id="rulesBtn" class="round-btn" type="button" aria-label="Game rules">⚙</button>
+    </div>
+
+    <section id="boardStage" class="board-stage" aria-label="Ludo board">
+      <div id="board" class="ludo-board" role="grid" aria-label="Traditional Ludo board"></div>
+      <div id="tokenLayer" class="token-layer" aria-live="polite"></div>
+      <div class="center-emblem" aria-hidden="true"><span>५</span><small>घर</small></div>
+    </section>
+
+    <div id="playersBar" class="players-bar"></div>
+
+    <section id="turnDock" class="turn-dock hidden">
+      <div class="turn-copy"><small id="turnKicker">YOUR TURN</small><b id="turnName">Player</b><span id="gameStatus">Roll the dice</span></div>
+      <button id="diceBtn" class="dice-btn" type="button" aria-label="Roll dice"><span id="diceFace">⚄</span><small>ROLL</small></button>
+    </section>
+
+    <section id="lobby" class="overlay lobby-overlay">
+      <div class="lobby-card">
+        <div class="heritage-mark"><span>५</span></div>
+        <div class="eyebrow">HOUSE FIVE · खेल आँगन</div>
+        <h1>Nepali Ludo</h1>
+        <p>A full-screen House Five game room. Create a room, wait for players, then let the family arguments begin in the traditional dice-based manner.</p>
+        <div id="lobbyStart" class="lobby-actions">
+          <button id="createRoomBtn" class="primary-btn" type="button">Create game</button>
+          <button id="quickPlayBtn" class="secondary-btn" type="button">Quick play with bots</button>
+        </div>
+        <div id="waitingRoom" class="waiting-room hidden">
+          <div class="room-code"><span>ROOM CODE</span><b id="roomCode">------</b><button id="copyCodeBtn" type="button">Copy</button></div>
+          <div id="lobbyPlayers" class="lobby-players"></div>
+          <div class="waiting-actions"><button id="addBotBtn" class="secondary-btn" type="button">＋ Add bot</button><button id="startGameBtn" class="primary-btn" type="button" disabled>Start game</button></div>
+          <small id="waitingHint">At least 2 players are required.</small>
+        </div>
+      </div>
+    </section>
+
+    <aside id="rulesDrawer" class="rules-drawer" aria-label="Custom rules">
+      <div class="rules-head"><div><small>HOUSE RULES</small><h2>Custom game rules</h2></div><button id="closeRulesBtn" class="round-btn" type="button">×</button></div>
+      <label><span><b>Extra roll on six</b><small>Classic rule</small></span><input type="checkbox" data-rule="extraSix" checked></label>
+      <label><span><b>Extra roll after capture</b><small>Reward aggressive play</small></span><input type="checkbox" data-rule="extraCapture" checked></label>
+      <label><span><b>Three sixes lose the turn</b><small>Stops endless luck</small></span><input type="checkbox" data-rule="threeSixes" checked></label>
+      <label><span><b>Exact roll to finish</b><small>No overshooting home</small></span><input type="checkbox" data-rule="exactFinish" checked></label>
+      <label><span><b>Safe star squares</b><small>Pieces cannot be captured there</small></span><input type="checkbox" data-rule="safeSquares" checked></label>
+      <label><span><b>Protected stacks</b><small>Two same-colour pieces form a block</small></span><input type="checkbox" data-rule="stackProtection" checked></label>
+      <button id="resetGameBtn" class="danger-btn" type="button">Reset local game</button>
+      <p class="rules-note">Standalone v0.1 uses local game state. Real multi-device rooms will use the House Five verified identity and a module-owned realtime service/database.</p>
+    </aside>
+    <div id="drawerScrim" class="drawer-scrim hidden"></div>
+    <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+  </main>
+  <script src="./app.js" defer></script>
+</body>
+</html>
