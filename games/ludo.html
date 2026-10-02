@@ -84,19 +84,26 @@
             <div><small>MODE</small><b id="modeName">Housemates</b><p id="modeDescription">Create a room and add people playing with you.</p></div>
           </div>
 
-          <div id="roomPanel" class="room-panel">
-            <div class="room-code-box">
-              <span><small>ROOM CODE</small><b id="roomCode">------</b></span>
+          <div id="roomPanel" class="room-panel online-room-panel">
+            <div class="room-connect-actions">
+              <button id="createRoomBtn" class="outline-btn create-online-room" type="button">＋ Create Room</button>
+              <div class="join-room-box">
+                <input id="joinCodeInput" type="text" inputmode="text" autocomplete="off" maxlength="6" placeholder="ROOM CODE" aria-label="Room code" />
+                <button id="joinRoomBtn" type="button">Join</button>
+              </div>
+            </div>
+            <div id="activeRoomBox" class="room-code-box hidden">
+              <span><small>YOUR ROOM</small><b id="roomCode">------</b></span>
               <button id="copyCodeBtn" type="button">Copy</button>
             </div>
-            <button id="createRoomBtn" class="outline-btn" type="button">Create new room</button>
+            <div id="roomStatus" class="room-status">Create a room or enter a housemate's code.</div>
           </div>
 
           <div class="section-kicker"><span>PLAYERS</span><small id="playerCountLabel">1 / 4</small></div>
           <div id="lobbyPlayers" class="player-slots"></div>
 
           <div id="housemateActions" class="setup-actions">
-            <button id="addHousemateBtn" class="secondary-action" type="button">＋ Add local housemate</button>
+            <button id="leaveRoomBtn" class="secondary-action" type="button" disabled>Leave Room</button>
             <button id="startGameBtn" class="start-action" type="button" disabled>Start Game <span>›</span></button>
           </div>
 
@@ -147,7 +154,7 @@
       <label><span><b>Safe star squares</b><small>Pieces cannot be captured there</small></span><input type="checkbox" data-rule="safeSquares" checked></label>
       <label><span><b>Protected stacks</b><small>Two same-colour pieces form a block</small></span><input type="checkbox" data-rule="stackProtection" checked></label>
       <button id="resetGameBtn" class="danger-btn" type="button">Reset game data</button>
-      <p class="rules-note">Housemate rooms are currently local/pass-and-play frontend mode. The room UI is ready for real House Five realtime multiplayer in the next backend stage.</p>
+      <p class="rules-note">Housemate rooms use your approved House Five session, server-generated dice, server-validated moves, persistent match state, and realtime room updates.</p>
     </aside>
 
     <div id="drawerScrim" class="drawer-scrim hidden"></div>

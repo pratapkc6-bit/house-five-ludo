@@ -1,15 +1,25 @@
 # House Five Ludo
 
-Polished mobile-first Ludo microfrontend for House Five.
+Realtime multiplayer Ludo microfrontend for House Five.
 
-**Version:** 0.3.0
+**Version:** 0.4.0
 
-## Frontend modes
+## Multiplayer v1
 
-- **Play with Housemates** — create a House Five room, add local/pass-and-play housemates, and start a shared game.
-- **Play with Bots** — choose 1–3 bots and start instantly.
-- **Quick Classic** — one-tap human + three bots.
+Housemate mode now uses the authenticated House Five backend:
 
-The UI now uses a game-first home screen, mode setup screen, full-screen board arena, corner player cards, large dice control, responsive mobile layout, and House Five return navigation.
+- Create a secure room with a six-character code
+- Join from another signed-in House Five device
+- Up to four approved housemates
+- Host-controlled match start
+- Server-generated dice
+- Server-validated moves, captures, safe squares, home lanes and wins
+- Persistent Neon/Postgres room and match state
+- House Five realtime long-poll updates
+- Refresh/reconnect recovery
+- Presence indicator based on recent room activity
+- Leave room and reconnect support
 
-Real multi-device Housemate rooms still require the server-authoritative realtime backend described in `ARCHITECTURE.md`.
+Bot mode remains local for instant offline play.
+
+Open Ludo through House Five at `/ludo` for authenticated multiplayer. Direct standalone deployment is intended for frontend preview and bot play.

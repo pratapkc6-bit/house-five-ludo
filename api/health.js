@@ -1,3 +1,3 @@
 module.exports = function handler(req, res) {
-  res.status(200).json({ ok: true, service: 'house-five-ludo', version: '0.3.0', architecture: 'microfrontend' });
+  res.status(200).json({ ok: true, service: 'house-five-ludo', version: '0.4.0', architecture: 'microfrontend', multiplayer: 'house-five-session' });
 };
