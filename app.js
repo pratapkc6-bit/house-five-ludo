@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const VERSION='0.4.1', STORE='house-five-ludo:v4';
+  const VERSION='0.4.2', STORE='house-five-ludo:v4';
   const launchParams=new URLSearchParams(location.search);
   let HOST_NAME=String(launchParams.get('player')||'House member').trim().slice(0,40)||'House member';
   let HOUSE_USER=null,realtimeGeneration=0,realtimeSeq=null;
@@ -34,7 +34,7 @@
     housemateActions:$('#housemateActions'),botActions:$('#botActions'),housematesTab:$('#housematesTab'),botsTab:$('#botsTab'),
     setupTitle:$('#setupTitle'),setupEyebrow:$('#setupEyebrow'),modeName:$('#modeName'),modeDescription:$('#modeDescription'),
     cornerPlayers:$('#cornerPlayers'),dice:$('#diceBtn'),face:$('#diceFace'),turnName:$('#turnName'),status:$('#gameStatus'),
-    playModeTitle:$('#playModeTitle'),drawer:$('#rulesDrawer'),scrim:$('#drawerScrim'),toast:$('#toast')
+    playModeTitle:$('#playModeTitle'),rematch:$('#rematchBtn'),drawer:$('#rulesDrawer'),scrim:$('#drawerScrim'),toast:$('#toast')
   };
 
   const defaultRules={extraSix:true,extraCapture:true,threeSixes:true,exactFinish:true,safeSquares:true,stackProtection:true};
@@ -136,7 +136,14 @@
   }
   function renderTurn(){
     const p=current();if(!p)return;
-    if(state.winner){els.turnName.textContent=`${state.winner.name} Wins!`;els.status.textContent=state.online?'Match saved on House Five':'Game complete';els.dice.disabled=true;return}
+    if(state.winner){
+      const me=state.players.find(x=>String(x.email||'').toLowerCase()===String(state.meEmail||'').toLowerCase());
+      const canRematch=!state.online||Boolean(me?.host);
+      els.turnName.textContent=`${state.winner.name} Wins!`;
+      els.status.textContent=state.online?(canRematch?'Start a rematch when everyone is ready.':'Waiting for the host to start a rematch.'):'Game complete';
+      els.dice.disabled=true;els.dice.classList.add('hidden');els.rematch.classList.toggle('hidden',!canRematch);return
+    }
+    els.dice.classList.remove('hidden');els.rematch.classList.add('hidden');
     const mine=canCurrentUserAct(p);
     els.turnName.textContent=mine?'Your Turn':`${p.name}'s Turn`;
     els.status.textContent=state.rolled?(mine?`Rolled ${state.dice} · choose a token`:`${p.name} rolled ${state.dice}`):(mine?'Tap the dice to roll':state.online?'Waiting for their move…':'Bot is rolling…');
@@ -221,6 +228,15 @@
   }
   function goHome(){clearTimeout(botTimer);if(state.online){leaveOnlineRoom({quiet:true});return}showScreen('home');render()}
   function leaveGame(){clearTimeout(botTimer);if(state.online){leaveOnlineRoom();return}showScreen('setup');render()}
+  async function rematchGame(){
+    if(!state.winner)return;
+    if(state.online){
+      try{const result=await api('ludo-rematch',{code:state.room});applyServerRoom(result.room);toast('Rematch started')}
+      catch(err){toast(err.message)}
+      return;
+    }
+    resetPieces();showScreen('playing');render();toast('New bot match started');
+  }
   async function rollDice(){
     const p=current();if(state.phase!=='playing'||state.rolled||!canCurrentUserAct(p)||state.winner)return;
     if(state.online){
@@ -293,7 +309,7 @@
   $('#createRoomBtn').addEventListener('click',createOnlineRoom);$('#joinRoomBtn').addEventListener('click',joinOnlineRoom);els.joinCode.addEventListener('keydown',e=>{if(e.key==='Enter')joinOnlineRoom()});
   els.leaveRoom.addEventListener('click',()=>leaveOnlineRoom());els.start.addEventListener('click',startGame);$('#startBotGameBtn').addEventListener('click',startGame);
   document.querySelectorAll('[data-bots]').forEach(b=>b.addEventListener('click',()=>chooseBotCount(Number(b.dataset.bots))));
-  els.dice.addEventListener('click',rollDice);
+  els.dice.addEventListener('click',rollDice);els.rematch.addEventListener('click',rematchGame);
   $('#copyCodeBtn').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(state.room||'');toast('Room code copied')}catch{toast(`Room: ${state.room||'------'}`)}});
   $('#chatStubBtn').addEventListener('click',()=>toast(state.online?'House match chat is coming next.':'Chat is available in House Five.'));
   $('#emojiStubBtn').addEventListener('click',()=>toast('🙂  😂  🔥  🎲'));

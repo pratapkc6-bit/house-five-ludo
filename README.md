@@ -2,7 +2,7 @@
 
 Realtime multiplayer Ludo microfrontend for House Five.
 
-**Version:** 0.4.1
+**Version:** 0.4.2
 
 ## Multiplayer v1
 
@@ -27,3 +27,5 @@ Open Ludo through House Five at `/ludo` for authenticated multiplayer. Direct st
 ## Proxy integration note
 
 Multiplayer API and session requests are pinned to `location.origin` so House Five authentication continues to work even though Ludo static assets use the standalone deployment as their document base.
+
+- Host-controlled rematch after a completed online game.
