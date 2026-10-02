@@ -1,9 +1,10 @@
 (() => {
   'use strict';
-  const VERSION='0.4.0', STORE='house-five-ludo:v4';
+  const VERSION='0.4.1', STORE='house-five-ludo:v4';
   const launchParams=new URLSearchParams(location.search);
   let HOST_NAME=String(launchParams.get('player')||'House member').trim().slice(0,40)||'House member';
   let HOUSE_USER=null,realtimeGeneration=0,realtimeSeq=null;
+  const HOUSE_ORIGIN=location.origin;
   const COLORS=['red','green','yellow','blue'];
   const COLOR_NAMES={red:'Red',green:'Green',yellow:'Yellow',blue:'Blue'};
   const START={red:0,green:13,yellow:26,blue:39};
@@ -48,7 +49,7 @@
   function showScreen(name){els.home.classList.toggle('hidden',name!=='home');els.setup.classList.toggle('hidden',name!=='setup');els.play.classList.toggle('hidden',name!=='playing');state.phase=name;save()}
   function setRoomStatus(text,kind=''){els.roomStatus.textContent=text;els.roomStatus.className='room-status'+(kind?' '+kind:'')}
   async function api(action,payload={}){
-    const res=await fetch('/api/app',{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({action,...payload})});
+    const res=await fetch(new URL('/api/app',HOUSE_ORIGIN).href,{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify({action,...payload})});
     let body={};try{body=await res.json()}catch{}
     if(!res.ok)throw new Error(body.error||('House Five request failed ('+res.status+')'));
     return body;
@@ -56,7 +57,7 @@
   async function ensureHouseUser({silent=false}={}){
     if(HOUSE_USER)return HOUSE_USER;
     try{
-      const res=await fetch('/api/session',{credentials:'include',cache:'no-store'});
+      const res=await fetch(new URL('/api/session',HOUSE_ORIGIN).href,{credentials:'include',cache:'no-store'});
       const body=await res.json().catch(()=>({}));
       if(!res.ok||body.status!=='approved'||!body.user)throw new Error(body.error||'Open Ludo from your signed-in House Five app.');
       HOUSE_USER=body.user;HOST_NAME=body.user.name||body.user.email||HOST_NAME;state.meEmail=String(body.user.email||'').toLowerCase();$('#profileName').textContent=HOST_NAME;save();return HOUSE_USER;

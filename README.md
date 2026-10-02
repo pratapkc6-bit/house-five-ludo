@@ -2,7 +2,7 @@
 
 Realtime multiplayer Ludo microfrontend for House Five.
 
-**Version:** 0.4.0
+**Version:** 0.4.1
 
 ## Multiplayer v1
 
@@ -23,3 +23,7 @@ Housemate mode now uses the authenticated House Five backend:
 Bot mode remains local for instant offline play.
 
 Open Ludo through House Five at `/ludo` for authenticated multiplayer. Direct standalone deployment is intended for frontend preview and bot play.
+
+## Proxy integration note
+
+Multiplayer API and session requests are pinned to `location.origin` so House Five authentication continues to work even though Ludo static assets use the standalone deployment as their document base.
